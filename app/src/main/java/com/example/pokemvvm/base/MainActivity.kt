@@ -32,25 +32,16 @@ class MainActivity : AppCompatActivity() {
         val viewModel = ViewModelProviders.of(this, factory)
             .get(QuotesViewModel::class.java)
         viewModel.getQuotes().observe(this, Observer { quotes ->
-            Log.e("QUOTES",quotes.toString())
-            val stringBuilder = StringBuilder()
-            quotes.forEach { quote ->
-                stringBuilder.append("$quote\n\n")
-            }
-            //textView_quotes.text = stringBuilder.toString()
-
             lm = LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false)
             quotesRecycler = quotesList
-
             quotesRecycler.layoutManager = lm
             quotesRecycler.adapter = QuotesAdapter(this, quotes)
 
             button_add_quote.setOnClickListener {
-                val quote = Quote(quote_editText.text.toString(), author_editText.text.toString())
+                val quote = Quote(quote_editText.text.toString())
                 viewModel.addQuotes(quote)
                 quote_editText.setText("")
-                author_editText.setText("")
             }
         })
     }
