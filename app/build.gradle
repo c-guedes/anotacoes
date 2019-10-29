@@ -1,0 +1,92 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        applicationId "com.example.pokemvvm"
+        minSdkVersion 26
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                abiFilters "arm64-v8a", "armeabi-v7a"
+            }
+        }
+
+    }
+    splits {
+        // Configures multiple APKs based on ABI.
+        abi {
+            // Enables building multiple APKs per ABI.
+            def isReleaseBuild = false
+
+
+            gradle.startParameter.taskNames.find {
+                // Enable split for release builds in different build flavors
+                // (assemblePaidRelease, assembleFreeRelease, etc.).
+                if (it ==~ /:app:assemble.*Release/) {
+                    isReleaseBuild = true
+                    return true // break
+                }
+
+                return false // continue
+            }
+            // By default all ABIs are included, so use reset() and include to specify that we only
+            // want APKs for x86, armeabi-v7a, and mips.
+            reset()
+
+            // Specifies a list of ABIs that Gradle should create APKs for.
+            include "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
+
+            // Specifies that we want to also generate a universal APK that includes all ABIs.
+            universalApk true
+        }
+    }
+    dataBinding {
+        enabled true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // setting dagger - retorfit - rxjava
+
+    implementation "android.arch.lifecycle:extensions:2.0.0-rc1"
+
+    implementation "com.squareup.retrofit2:retrofit:2.6.2"
+    implementation "com.squareup.retrofit2:converter-gson:2.6.2"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.2"
+    implementation "com.squareup.retrofit2:converter-moshi:2.6.2"
+
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.13"
+
+    implementation "com.jakewharton:butterknife:10.2.0"
+    annotationProcessor "com.jakewharton:butterknife-compiler:10.2.0"
+
+    implementation "com.google.dagger:dagger:2.25.2"
+    annotationProcessor "com.google.dagger:dagger-compiler:2.25.2"
+    implementation "com.google.dagger:dagger-android-support:2.25.2"
+    annotationProcessor "com.google.dagger:dagger-android-processor:2.25.2"
+}
