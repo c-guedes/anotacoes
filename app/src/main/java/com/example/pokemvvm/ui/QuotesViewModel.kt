@@ -11,4 +11,6 @@ class QuotesViewModel(private val quoteRepository: QuoteRepository)
     fun getQuotes() = quoteRepository.getQuotes()
 
     fun addQuotes(quote: Quote) = quoteRepository.addQuote(quote)
+
+    fun removeQuote(position: Int) = quoteRepository.removeQuote(position)
 }

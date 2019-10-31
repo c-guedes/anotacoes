@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 class FakeQuoteDao {
-    private val quoteList = mutableListOf<Quote>()
-    private val quotes = MutableLiveData<List<Quote>>()
+    private val quoteList = ArrayList<Quote>()
+    private val quotes = MutableLiveData<ArrayList<Quote>>()
 
     init{
         quotes.value = quoteList
@@ -16,5 +16,7 @@ class FakeQuoteDao {
         quotes.value = quoteList
     }
 
-    fun getQuotes() = quotes as LiveData<List<Quote>>
+    fun getQuotes() = quotes as LiveData<ArrayList<Quote>>
+
+    fun removeQuote(position: Int) = quoteList.removeAt(position)
 }

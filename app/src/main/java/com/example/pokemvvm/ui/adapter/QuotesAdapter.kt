@@ -2,10 +2,14 @@ package com.example.pokemvvm.ui.adapter
 
 
 import android.content.Context
+import android.content.res.Resources
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.pokemvvm.R
@@ -13,11 +17,15 @@ import com.example.pokemvvm.data.model.Quote
 import kotlinx.android.synthetic.main.base_recycler.view.*
 
 
-class QuotesAdapter(
-    private val context: Context, private val quot: List<Quote>
-) : Adapter<QuotesAdapter.ViewHolder>() {
-    private val list: ArrayList<String> = arrayListOf()
 
+
+
+
+class QuotesAdapter(
+    private val context: Context, private val quot: ArrayList<Quote>,
+    val clickListener:(positionNow: Int )-> Unit
+) : Adapter<QuotesAdapter.ViewHolder>() {
+    val sQuot = mutableListOf(quot)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.base_recycler, parent, false)
         return ViewHolder(view)
@@ -27,45 +35,48 @@ class QuotesAdapter(
         return quot.size
     }
 
-
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val mQuoq: Quote = quot[position]
 
-        holder.quote.text = quot[position].quoteText
+        holder.mQuote.text = mQuoq.quoteText
+
+        holder.bind(mQuoq,context.resources)
+
+        holder.mHeader.setOnClickListener {
+            // Get the current state of the item
+            val mExpanded = mQuoq.expanded
+            // Change the state
+            mQuoq.expanded = !mExpanded
+            // Notify the adapter that item has changed
+            notifyItemChanged(position)
+        }
+
+
+        holder.mClose.setOnClickListener{
+            quot.removeAt(position)
+            clickListener(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, quot.size)
+            Log.e("WHO",quot.toString())
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // init vals
-        val quote = itemView.quoteText
-    }
+        val mQuote = itemView.quoteText
+        val mHeader = itemView.lmexpand
+        val mClose = itemView.ic_close
 
-//    private fun getImage(brandName: String): Int {
-//        return when (brandName) {
-//            "VISA" -> R.drawable.ic_visa
-//            "ELO CREDITO" -> R.drawable.ic_elo
-//            "MAESTRO" -> R.drawable.ic_maestro
-//            "DISCOVER" -> R.drawable.ic_discover
-//            "MASTER" -> R.drawable.ic_master
-//            else -> R.drawable.ic_visa
-//        }
-//    }
-//
-//    private fun concatenateStrings(campo: String, numParcel: Int): String{
-//        return when (campo){
-//            "Parcelamento sem Juros" -> "Parcelamento S/ Juros (${numParcel}x)"
-//            "Parcelamento com Juros" -> "Parcelamento C/ Juros (${numParcel}x)"
-//            else -> campo
-//        }
-//
-//    }
-//
-//    private fun getStatus(estado: Int): String{
-//        return when(estado){
-//            0 -> "Pendente | "
-//            1 -> "Confirmada | "
-//            2 -> "Desfeita | "
-//            3 -> "Negada | "
-//            else -> "Cancelada | "
-//        }
-//    }
+        fun bind(quoq: Quote, res: Resources){
+            val expanded = quoq.expanded
+            mQuote.visibility =
+                if(expanded){
+                    mHeader.background = res.getDrawable(R.drawable.top_baloon_cornered, null)
+                    GONE
+                }else{
+                    mHeader.background = res.getDrawable(R.drawable.top_baloon, null)
+                    VISIBLE
+                }
+        }
+    }
 }

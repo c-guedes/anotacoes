@@ -9,6 +9,10 @@ class QuoteRepository private constructor(private val quoteDao: FakeQuoteDao){
         quoteDao.addQuote(quote)
     }
 
+    fun removeQuote(position: Int){
+        quoteDao.removeQuote(position)
+    }
+
     fun getQuotes() = quoteDao.getQuotes()
 
     companion object{
