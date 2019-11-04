@@ -9,7 +9,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.pokemvvm.R
@@ -17,13 +16,9 @@ import com.example.pokemvvm.data.model.Quote
 import kotlinx.android.synthetic.main.base_recycler.view.*
 
 
-
-
-
-
 class QuotesAdapter(
     private val context: Context, private val quot: ArrayList<Quote>,
-    val clickListener:(positionNow: Int )-> Unit
+    val clickListener:(position: Long )-> Unit
 ) : Adapter<QuotesAdapter.ViewHolder>() {
     val sQuot = mutableListOf(quot)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -53,8 +48,8 @@ class QuotesAdapter(
 
 
         holder.mClose.setOnClickListener{
+            clickListener(quot[position].quoteId)
             quot.removeAt(position)
-            clickListener(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, quot.size)
             Log.e("WHO",quot.toString())

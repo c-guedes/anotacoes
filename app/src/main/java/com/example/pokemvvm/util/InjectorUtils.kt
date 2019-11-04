@@ -1,13 +1,13 @@
 package com.example.pokemvvm.util
 
-import com.example.pokemvvm.data.model.FakeDatabase
-import com.example.pokemvvm.data.repository.QuoteRepository
+import android.app.Application
+import com.example.pokemvvm.data.database.QuoteDatabase
 import com.example.pokemvvm.ui.QuotesViewModelFactory
 
 object InjectorUtils {
 
-    fun provideQuotesViewModelFactory(): QuotesViewModelFactory{
-        val quoteRepository= QuoteRepository.getInstance(FakeDatabase.getInstance().quoteDao)
-        return QuotesViewModelFactory(quoteRepository)
+    fun provideQuotesViewModelFactory(application: Application): QuotesViewModelFactory {
+        val dataSource = QuoteDatabase.getInstance(application).quoteDatabaseDao
+        return QuotesViewModelFactory(dataSource, application)
     }
 }
