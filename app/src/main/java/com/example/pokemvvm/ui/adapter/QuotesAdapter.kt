@@ -30,6 +30,12 @@ class QuotesAdapter(
         return quot.size
     }
 
+    fun removeAt(position: Int) {
+        quot.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, quot.size)
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val mQuoq: Quote = quot[position]
 

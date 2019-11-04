@@ -99,11 +99,6 @@ dependencies {
     // new preference
     implementation "androidx.preference:preference-ktx:1.1.0"
 
-    //preference room
-    kapt "com.github.skydoves:preferenceroom-processor:1.1.8"
-    implementation "com.github.skydoves:preferenceroom:1.1.8"
-    annotationProcessor "com.github.skydoves:preferenceroom-processor:1.1.8"
-
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$version_room"
     kapt "androidx.room:room-compiler:$version_room"
@@ -112,6 +107,4 @@ dependencies {
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
-
-
 }

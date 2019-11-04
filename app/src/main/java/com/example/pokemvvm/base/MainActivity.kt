@@ -5,11 +5,13 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokemvvm.R
 import com.example.pokemvvm.data.model.Quote
 import com.example.pokemvvm.ui.QuotesViewModel
+import com.example.pokemvvm.ui.SwipeToDeleteCallback
 import com.example.pokemvvm.ui.adapter.QuotesAdapter
 import com.example.pokemvvm.util.InjectorUtils
 import kotlinx.android.synthetic.main.activity_main.*
@@ -37,10 +39,21 @@ class MainActivity : AppCompatActivity() {
         quotesRecycler = quotesList
         quotesRecycler.layoutManager = lm
 
+
+
         viewModel.getQuotes().observe(this, Observer { quotes ->
             quotesRecycler.adapter =
                 QuotesAdapter(this, ArrayList(quotes))
                 { clicked -> viewModel.removeQuote(clicked) }
+
+            val swipeHandler = object : SwipeToDeleteCallback(this) {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val adapter = quotesRecycler.adapter as QuotesAdapter
+                    adapter.removeAt(viewHolder.adapterPosition)
+                }
+            }
+            val itemTouchHelper = ItemTouchHelper(swipeHandler)
+            itemTouchHelper.attachToRecyclerView(quotesRecycler)
 
             button_add_quote.setOnClickListener {
                 val quote = Quote(quote_editText.text.toString())
